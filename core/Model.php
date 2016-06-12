@@ -5,7 +5,7 @@ namespace Core;
 
 class Model
 {
-    protected $pdo;
+    public $pdo;
 
     protected $id;
 
@@ -13,14 +13,10 @@ class Model
 
     public function getColumn(){}
 
-    public function __construct($pdo = null)
+    public function setPDO($pdo)
     {
-        $opt = array(
-            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
-        );
-        $this->pdo = $pdo ? $pdo : new \PDO('mysql:dbname=question;host=127.0.0.1', 'root', '', $opt);
+        $this->pdo = $pdo;
+        return $this;
     }
 
     public function makeQuery($sql, $many = false, $opt= null)

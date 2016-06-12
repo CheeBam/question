@@ -6,12 +6,10 @@ use Core\Controller;
 
 class AuthController extends Controller
 {
-    protected $auth;
 
     public function __construct($di)
     {
         parent::__construct($di);
-        $this->auth = $this->container->get('auth');
     }
 
     public function callback()

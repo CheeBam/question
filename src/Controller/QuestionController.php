@@ -19,13 +19,13 @@ class QuestionController extends Controller
     {
         if($this->request->isPost()) {
             $expert = new Expert();
-            $expert = $expert->find('id', $this->request->get('expert_id'));
+            $expert = $expert->setPDO($this->pdo)->find('id', $this->request->get('expert_id'));
 
             $author = new Author();
-            $author = $author->find('email', $this->session->get('email'));
+            $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
 
             $category = new Category();
-            $category = $category->find('name', $this->request->get('category'));
+            $category = $category->setPDO($this->pdo)->find('name', $this->request->get('category'));
 
             $date = new \DateTime(null, new \DateTimeZone('Europe/Kiev'));
             $question = new Question();
@@ -37,7 +37,7 @@ class QuestionController extends Controller
             $question->expert_id = $expert->id;
             $question->rating = null;
             $question->hash = md5($question->date);
-            $question->save();
+            $question->setPDO($this->pdo)->save();
 
             $author_name = empty($author->name) ? '': '</p><p>Author name: '.$author->name.'</p>';
 
@@ -56,9 +56,9 @@ class QuestionController extends Controller
     {
         if($this->request->isPost()) {
             $question = new Question();
-            $question = $question->find('id', $this->request->get('question_id'));
+            $question = $question->setPDO($this->pdo)->find('id', $this->request->get('question_id'));
             $question->rating = $this->request->get('radio_value');
-            $question->update();
+            $question->setPDO($this->pdo)->update();
         }
     }
 
@@ -77,8 +77,10 @@ class QuestionController extends Controller
         $question = new Question();
         $category = new Category();
 
-        $author = $author->find('email', $this->session->get('email'));
-        $my_questions = $question->findByKey('*', 'author_id', $author->id, 'date', false, true);
+        $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
+        $my_questions = $question->setPDO($this->pdo)->findByKey('*', 'author_id', $author->id, 'date', false, true);
+        $expert->setPDO($this->pdo);
+        $category->setPDO($this->pdo);
 
         foreach($my_questions as $key => $value) {
             if($my_questions[$key]['answer'] === ''){
@@ -101,17 +103,17 @@ class QuestionController extends Controller
     public function answer($hash)
     {
         $question = new Question();
-        $question = $question->find('hash', $hash);
+        $question = $question->setPDO($this->pdo)->find('hash', $hash);
         if(!$question){
             return $this->view->render('404');
         }
 
         $author = new Author();
-        $author = $author->find('id', $question->author_id);
+        $author = $author->setPDO($this->pdo)->find('id', $question->author_id);
         $author_name = isset($author->name) ? $author->name : $author->email;
 
         $category = new Category();
-        $category = $category->find('id', $question->category_id);
+        $category = $category->setPDO($this->pdo)->find('id', $question->category_id);
 
         $vars = [
             'author'    => $author_name,
@@ -129,15 +131,15 @@ class QuestionController extends Controller
     {
         if($this->request->isPost()) {
             $question = new Question();
-            $question = $question->find('text', $this->request->get('question'));
+            $question = $question->setPDO($this->pdo)->find('text', $this->request->get('question'));
             $question->answer = $this->request->get('answer');
-            $question->update();
+            $question->setPDO($this->pdo)->update();
 
             $expert = new Expert();
-            $expert = $expert->find('id', $question->expert_id);
+            $expert = $expert->setPDO($this->pdo)->find('id', $question->expert_id);
 
             $author = new Author();
-            $author = $author->find('id', $question->author_id);
+            $author = $author->setPDO($this->pdo)->find('id', $question->author_id);
 
             $vars = [
                 'greeting' => 'Hello. You\'ve got an answer for your question!',

@@ -3,6 +3,7 @@
 namespace Src\Controller;
 
 use Core\Controller;
+use Core\V;
 use Src\Model\Author;
 use Src\Model\Category;
 use Src\Model\Category_has_Expert;
@@ -26,13 +27,13 @@ class SettingsController extends Controller
         }
 
         $author = new Author();
-        $author = $author->find('email', $this->session->get('email'));
+        $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
 
         $expert = new Expert();
-        $expert = $expert->find('email', $this->session->get('email'));
+        $expert = $expert->setPDO($this->pdo)->find('email', $this->session->get('email'));
 
         $categories = new Category();
-        $categories = $categories->findAll();
+        $categories = $categories->setPDO($this->pdo)->findAll();
 
         $vars = [
             'logged'     => true,
@@ -48,9 +49,9 @@ class SettingsController extends Controller
     {
         if($this->request->isPOst()){
             $author = new Author();
-            $author = $author->find('email', $this->session->get('email'));
+            $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
             $author->name = $this->request->get('changed_name');
-            $author->update();
+            $author->setPDO($this->pdo)->update();
         }
     }
 
@@ -62,16 +63,17 @@ class SettingsController extends Controller
             $expert->email = $this->session->get('email');
             $expert->photo = $this->request->get('expert_photo');
             $expert->description = $this->request->get('description');
-            $expert->save();
+            $expert->setPDO($this->pdo)->save();
 
             $current_expert = $expert->find('email', $expert->email);
 
             $categories = $this->request->get('category');
+
             foreach($categories as $var){
                 $cat_exp = new Category_has_Expert();
                 $cat_exp->category_id = $var;
                 $cat_exp->expert_id = $current_expert->id;
-                $cat_exp->save();
+                $cat_exp->setPDO($this->pdo)->save();
             }
         }
     }

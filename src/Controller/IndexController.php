@@ -3,6 +3,7 @@
 namespace Src\Controller;
 
 use Core\Controller;
+use Core\V;
 use Src\Model\Category;
 use Src\Model\Category_has_Expert;
 use Src\Model\Expert;
@@ -22,8 +23,10 @@ class IndexController extends Controller
         $expert = new Expert();
         $question = new Question();
 
-        $all_cats = $category->findAll();
-        $all_exp = $expert->findAll();
+        $all_cats = $category->setPDO($this->pdo)->findAll();
+        $all_exp = $expert->setPDO($this->pdo)->findAll();
+
+        $question->setPDO($this->pdo);
 
         foreach ($all_exp as $key => $value){
             $all_quest = $question->findByKey(['answer','rating'], 'expert_id', $all_exp[$key]->id, null, false, true);
@@ -42,7 +45,7 @@ class IndexController extends Controller
                 $all_exp[$key]->count_of_ans = $count;
                 $all_exp[$key]->rating = round($rateSum / $count, 1);
             }
-            $all_exp[$key]->update();
+            $all_exp[$key]->setPDO($this->pdo)->update();
         }
 
         $experts = $expert->findByKey('*', 1, 1, 'rating', false, true);
@@ -60,13 +63,17 @@ class IndexController extends Controller
     public function showCategory($category_id)
     {
         $category = new Category();
-        $current_category = $category->find('id', $category_id);
         $cat_expert = new Category_has_Expert();
-        $nums_experts = $cat_expert->findByKey('expert_id', 'category_id', $category_id, null, true, true, \PDO::FETCH_COLUMN);
+
+        $current_category = $category->setPDO($this->pdo)->find('id', $category_id);
+        if(!$current_category) return $this->view->render('404');
+
+        $nums_experts = $cat_expert->setPDO($this->pdo)->findByKey('expert_id', 'category_id', $category_id, null, true, true, \PDO::FETCH_COLUMN);
+
         $experts = [];
         foreach($nums_experts as $var){
             $exp = new Expert();
-            $exp = $exp->find('id', $var);
+            $exp = $exp->setPDO($this->pdo)->find('id', $var);
             if($this->auth->verifyLog() && $exp->email === $this->session->get('email')) continue;
             $experts[] = $exp;
         }

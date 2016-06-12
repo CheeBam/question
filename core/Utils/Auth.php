@@ -66,7 +66,7 @@ class Auth implements ContainerInterface
     public function store($payload)
     {
         $author = new Author();
-        $data = $author->find('email', $payload['email']);
+        $data = $author->setPDO($this->container->get('pdo'))->find('email', $payload['email']);
         if(!$data){
             $author->google_id = $payload['sub'];
             $author->email = $payload['email'];
@@ -74,6 +74,7 @@ class Auth implements ContainerInterface
             $author->save();
         }else{
             $data->access_token = $this->container->get('session')->get('access_token');
+            $data->setPDO($this->container->get('pdo'));
             $data->update();
         }
     }
@@ -82,7 +83,7 @@ class Auth implements ContainerInterface
     {
         if($this->container->get('session')->has('access_token')){
             $author = new Author();
-            $token = $author->findByKey('access_token', 'email', $this->container->get('session')->get('email'));
+            $token = $author->setPDO($this->container->get('pdo'))->findByKey('access_token', 'email', $this->container->get('session')->get('email'));
             if($token['access_token'] === $this->container->get('session')->get('access_token')) return true;
         }
         return false;
