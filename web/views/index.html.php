@@ -83,11 +83,11 @@
     <div class="row">
 
         <div class="col-lg-1"></div>
-        <?php foreach($experts as $var){ ?>
+        <?php for($i = 0; $i < 5; $i++){ ?>
             <div class="col-lg-2 index-cat-div index-delimiter">
-                <h4 class="text-center font_color"><?=$var['name']?></h4>
-                <div class="text-center"><img class="index-expert-photo" src="<?=$var['photo']?>"></div>
-                <h3 class="text-center font_color" style="font-style: oblique"><?=$var['rating']?></h3>
+                <h4 class="text-center font_color"><?=$experts[$i]['name']?></h4>
+                <div class="text-center"><img class="index-expert-photo" src="<?=$experts[$i]['photo']?>"></div>
+                <h3 class="text-center font_color" style="font-style: oblique"><?=$experts[$i]['rating']?></h3>
             </div>
         <?php } ?>
 

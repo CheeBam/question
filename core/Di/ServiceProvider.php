@@ -12,8 +12,7 @@ use Core\View;
 
 class ServiceProvider implements ServiceProviderInterface
 {
-    //public function register(Container $container)
-    public function register($container)
+    public function register(Container $container)
     {
         $config = include_once ROOT.'conf/config.php';
 
@@ -24,7 +23,7 @@ class ServiceProvider implements ServiceProviderInterface
         $container->set('request', '\Core\Http\Request');
         $container->set('response', '\Core\Http\Response');
 
-        $container->set('model', new Model($config));
+        $container->set('pdo', new \PDO('mysql:dbname=question;host=127.0.0.1', 'root', '', $config['dboption']));
 
         $container->set('session', new Session());
 

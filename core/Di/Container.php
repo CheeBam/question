@@ -10,13 +10,6 @@ namespace Core\Di;
            return new Request();
      });
 
-
-
-
-
-
-
-
 */
 
 
@@ -27,7 +20,6 @@ class Container
 
     public $used_services = [];
 
-    //public function register(ServiceProviderInterface $service_provider)
     public function register(ServiceProviderInterface $service_provider)
     {
         $service_provider->register($this);

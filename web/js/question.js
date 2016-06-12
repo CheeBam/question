@@ -152,7 +152,7 @@ $(document).ready(function() {
         e.preventDefault();
         var form = $(this);
         var error = false;
-        form.find('input[type="text"], textarea').each(function(){
+        form.find('textarea').each(function(){
             if($(this).val().length < 10) {
                 alert('Fill the field ' + $(this).attr('name') + '[More than 10 characters]');
                 error = true;

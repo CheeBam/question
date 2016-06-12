@@ -10,6 +10,5 @@ namespace Core\Di;
 
 interface ServiceProviderInterface
 {
-    //public function register(Container $container);
-    public function register($container);
+    public function register(Container $container);
 }
