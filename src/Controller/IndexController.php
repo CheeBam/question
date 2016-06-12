@@ -38,7 +38,7 @@ class IndexController extends Controller
                 $rateSum = 0;
                 $count = 0;
                 foreach ($all_quest as $new_var){
-                    if($new_var['answer'] === '') continue;
+                    if($new_var['answer'] === '' || $new_var['rating'] == 0) continue;
                     $rateSum += $new_var['rating'];
                     $count++;
                 }

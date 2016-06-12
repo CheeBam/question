@@ -3,7 +3,6 @@
 namespace Core\Di;
 
 use Core\Application;
-use Core\Model;
 use Core\Router;
 use Core\Utils\Auth;
 use Core\Utils\Mailer;

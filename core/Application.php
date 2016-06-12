@@ -19,7 +19,7 @@ class Application implements ContainerInterface
     public function run($uri = '')
     {
         $rules = $this->container->get('router')->addRoute(include_once ROOT.'conf/routes.php')->execute($uri);
-        if (class_exists($rules['controller'])) {
+        if (class_exists($rules['controller']) || is_object($rules['controller'])) {
             $controller = new $rules['controller']($this->container);
             if (method_exists($controller, $rules['action'])) {
                 $action = $rules['action'];

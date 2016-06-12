@@ -21,12 +21,16 @@ class Router implements ContainerInterface
 
     public function execute($uri)
     {
+
         $this->uri = $uri !== '' ? $uri : $this->container->get('request')->getUri();
 
         foreach ($this->routes as $name => $route) {
 
-            $pattern = $route['pattern'];
+            if(array_key_exists('method', $route)){
+                if(strtoupper($route['method']) !== $this->container->get('request')->getMethod()) continue;
+            }
 
+            $pattern = $route['pattern'];
             if(array_key_exists('params', $route)){
                 foreach($route['params'] as $param => $patt){
                     $pattern .= $patt;

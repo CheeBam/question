@@ -3,13 +3,13 @@
 namespace Core\Di;
 
 /*
+    $container->set('request', new \Core\Http\Request); - Same object;
 
-    $container->set('request', '\Core\Http\Request');
+    $container->set('request', '\Core\Http\Request');   - New object;
 
     $container->set('request', function(){
            return new Request();
-     });
-
+     });                                                - ($new_instance) ? New object : Same object
 */
 
 
@@ -37,7 +37,7 @@ class Container
         if (array_key_exists($name, $this->services)) {
             if(is_object($this->services[$name])){
                 if($this->services[$name] instanceof \Closure) {
-                    if ($new_instance && array_key_exists($name, $this->used_services)) {
+                    if (!$new_instance && array_key_exists($name, $this->used_services)) {
                         $instance = $this->used_services[$name];
                     }else{
                         $instance = call_user_func($this->services[$name]);

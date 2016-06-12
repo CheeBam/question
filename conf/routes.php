@@ -16,7 +16,7 @@ return array(
         'controller' => 'Src\\Controller\\AuthController',
         'action'     => 'callback',
         'params'     => array(
-            'get' => '\?[\w\d=\/\-]+'
+            'id' => '\?[\w\d=\/\-]+'
         )
     ),
     'category'       => array(
@@ -30,7 +30,8 @@ return array(
     'sbt_question'   => array(
         'pattern'    => '#submitform',
         'controller' => 'Src\\Controller\\QuestionController',
-        'action'     => 'questionSubmit'
+        'action'     => 'questionSubmit',
+        'method'     => 'post'
     ),
     'questions'      => array(
         'pattern'    => '#myquestions',
@@ -41,6 +42,7 @@ return array(
         'pattern'    => '#submitradio',
         'controller' => 'Src\\Controller\\QuestionController',
         'action'     => 'radioSubmit',
+        'method'     => 'post'
     ),
     'answers'        => array(
         'pattern'    => '#answer',
@@ -53,7 +55,8 @@ return array(
     'sbt_answer'     => array(
         'pattern'    => '#submitanswer',
         'controller' => 'Src\\Controller\\QuestionController',
-        'action'     => 'answerSubmit'
+        'action'     => 'answerSubmit',
+        'method'     => 'post'
     ),
     'settings'       => array(
         'pattern'    => '#settings',
@@ -63,12 +66,14 @@ return array(
     'change_name'    => array(
         'pattern'    => '#changename',
         'controller' => 'Src\\Controller\\SettingsController',
-        'action'     => 'changeName'
+        'action'     => 'changeName',
+        'method'     => 'post'
     ),
     'become_expert'  => array(
         'pattern'    => '#becomeexpert',
         'controller' => 'Src\\Controller\\SettingsController',
-        'action'     => 'becomeExpert'
+        'action'     => 'becomeExpert',
+        'method'     => 'post'
     ),
     'leave_expert'  => array(
         'pattern'    => '#leaveexpert',

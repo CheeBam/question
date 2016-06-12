@@ -17,49 +17,45 @@ class QuestionController extends Controller
 
     public function questionSubmit()
     {
-        if($this->request->isPost()) {
-            $expert = new Expert();
-            $expert = $expert->setPDO($this->pdo)->find('id', $this->request->get('expert_id'));
+        $expert = new Expert();
+        $expert = $expert->setPDO($this->pdo)->find('id', $this->request->get('expert_id'));
 
-            $author = new Author();
-            $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
+        $author = new Author();
+        $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
 
-            $category = new Category();
-            $category = $category->setPDO($this->pdo)->find('name', $this->request->get('category'));
+        $category = new Category();
+        $category = $category->setPDO($this->pdo)->find('name', $this->request->get('category'));
 
-            $date = new \DateTime(null, new \DateTimeZone('Europe/Kiev'));
-            $question = new Question();
-            $question->text = $this->request->get('question');
-            $question->date = $date->format('Y-m-d H:i:s');
-            $question->answer = null;
-            $question->category_id = $category->id;
-            $question->author_id = $author->id;
-            $question->expert_id = $expert->id;
-            $question->rating = null;
-            $question->hash = md5($question->date);
-            $question->setPDO($this->pdo)->save();
+        $date = new \DateTime(null, new \DateTimeZone('Europe/Kiev'));
+        $question = new Question();
+        $question->text = $this->request->get('question');
+        $question->date = $date->format('Y-m-d H:i:s');
+        $question->answer = null;
+        $question->category_id = $category->id;
+        $question->author_id = $author->id;
+        $question->expert_id = $expert->id;
+        $question->rating = null;
+        $question->hash = md5($question->date);
+        $question->setPDO($this->pdo)->save();
 
-            $author_name = empty($author->name) ? '': '</p><p>Author name: '.$author->name.'</p>';
+        $author_name = empty($author->name) ? '': '</p><p>Author name: '.$author->name.'</p>';
 
-            $vars = [
-                'greeting' => 'Hello. You\'ve got a question in the category: '.$category->name,
-                'text'     => 'Please answer ',
-                'url'      => 'http://question.com/answer/'.$question->hash,
-                'footer'   => 'Author email: '.$author->email.$author_name
-            ];
+        $vars = [
+            'greeting' => 'Hello. You\'ve got a question in the category: '.$category->name,
+            'text'     => 'Please answer ',
+            'url'      => 'http://question.com/answer/'.$question->hash,
+            'footer'   => 'Author email: '.$author->email.$author_name
+        ];
 
-            $this->mailer->send($expert->email, 'New Question!', $this->view->add($vars)->render('email'));
-        }
+        $this->mailer->send($expert->email, 'New Question!', $this->view->add($vars)->render('email'));
     }
 
     public function radioSubmit()
     {
-        if($this->request->isPost()) {
-            $question = new Question();
-            $question = $question->setPDO($this->pdo)->find('id', $this->request->get('question_id'));
-            $question->rating = $this->request->get('radio_value');
-            $question->setPDO($this->pdo)->update();
-        }
+        $question = new Question();
+        $question = $question->setPDO($this->pdo)->find('id', $this->request->get('question_id'));
+        $question->rating = $this->request->get('radio_value');
+        $question->setPDO($this->pdo)->update();
     }
 
     public function showQuestions()
@@ -129,26 +125,24 @@ class QuestionController extends Controller
 
     public function answerSubmit()
     {
-        if($this->request->isPost()) {
-            $question = new Question();
-            $question = $question->setPDO($this->pdo)->find('text', $this->request->get('question'));
-            $question->answer = $this->request->get('answer');
-            $question->setPDO($this->pdo)->update();
+        $question = new Question();
+        $question = $question->setPDO($this->pdo)->find('text', $this->request->get('question'));
+        $question->answer = $this->request->get('answer');
+        $question->setPDO($this->pdo)->update();
 
-            $expert = new Expert();
-            $expert = $expert->setPDO($this->pdo)->find('id', $question->expert_id);
+        $expert = new Expert();
+        $expert = $expert->setPDO($this->pdo)->find('id', $question->expert_id);
 
-            $author = new Author();
-            $author = $author->setPDO($this->pdo)->find('id', $question->author_id);
+        $author = new Author();
+        $author = $author->setPDO($this->pdo)->find('id', $question->author_id);
 
-            $vars = [
-                'greeting' => 'Hello. You\'ve got an answer for your question!',
-                'text'     => 'You can see it ',
-                'url'      => 'http://question.com/myquestions',
-                'footer'   => 'Answered from '.$expert->name
-            ];
+        $vars = [
+            'greeting' => 'Hello. You\'ve got an answer for your question!',
+            'text'     => 'You can see it ',
+            'url'      => 'http://question.com/myquestions',
+            'footer'   => 'Answered from '.$expert->name
+        ];
 
-            $this->mailer->send($author->email, 'Your Answer', $this->view->add($vars)->render('email'));
-        }
+        $this->mailer->send($author->email, 'Your Answer', $this->view->add($vars)->render('email'));
     }
 }

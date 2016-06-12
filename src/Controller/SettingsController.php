@@ -47,34 +47,30 @@ class SettingsController extends Controller
 
     public function changeName()
     {
-        if($this->request->isPOst()){
-            $author = new Author();
-            $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
-            $author->name = $this->request->get('changed_name');
-            $author->setPDO($this->pdo)->update();
-        }
+        $author = new Author();
+        $author = $author->setPDO($this->pdo)->find('email', $this->session->get('email'));
+        $author->name = $this->request->get('changed_name');
+        $author->setPDO($this->pdo)->update();
     }
 
     public function becomeExpert()
     {
-        if($this->request->isPost()){
-            $expert = new Expert();
-            $expert->name = $this->request->get('expert_name');
-            $expert->email = $this->session->get('email');
-            $expert->photo = $this->request->get('expert_photo');
-            $expert->description = $this->request->get('description');
-            $expert->setPDO($this->pdo)->save();
+        $expert = new Expert();
+        $expert->name = $this->request->get('expert_name');
+        $expert->email = $this->session->get('email');
+        $expert->photo = $this->request->get('expert_photo');
+        $expert->description = $this->request->get('description');
+        $expert->setPDO($this->pdo)->save();
 
-            $current_expert = $expert->find('email', $expert->email);
+        $current_expert = $expert->find('email', $expert->email);
 
-            $categories = $this->request->get('category');
+        $categories = $this->request->get('category');
 
-            foreach($categories as $var){
-                $cat_exp = new Category_has_Expert();
-                $cat_exp->category_id = $var;
-                $cat_exp->expert_id = $current_expert->id;
-                $cat_exp->setPDO($this->pdo)->save();
-            }
+        foreach($categories as $var){
+            $cat_exp = new Category_has_Expert();
+            $cat_exp->category_id = $var;
+            $cat_exp->expert_id = $current_expert->id;
+            $cat_exp->setPDO($this->pdo)->save();
         }
     }
 }
