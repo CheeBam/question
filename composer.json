@@ -1,0 +1,22 @@
+{
+  "name": "cheebam/question",
+  "description": "none",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cheebam",
+      "email": "qqaassdd@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "google/apiclient": "^2.0.0@RC",
+    "swiftmailer/swiftmailer": "@stable"
+  },
+  "autoload": {
+    "psr-4": {
+      "Core\\": "core/",
+      "Src\\": "src/"
+    }
+  }
+}
